@@ -17,8 +17,8 @@ This project is a **hybrid movie recommendation system** that combines **Content
 - 🧹 **Data Cleaning & Preparation**  
   Removed missing values, merged metadata with ratings data, extracted key features like genres, tags, and processed them for modeling.
 
-- 🧠 **Content-Based Filtering using Bag of Words**  
-  Utilized the Bag of Words (BoW) model and cosine similarity to recommend movies based on shared textual features such as genres, keywords, and overviews.
+- 🧠 **Content-Based Filtering using TF-IDF**  
+  Utilized the TF-IDF model and cosine similarity to recommend movies based on shared textual features such as genres, keywords, and overviews.
 
 - 🤖 **Neural Collaborative Filtering (NCF)**  
   Implemented a deep learning-based recommendation model combining **Generalized Matrix Factorization (GMF)** and **Multi-Layer Perceptron (MLP)** to learn user-item interaction patterns.
@@ -37,7 +37,7 @@ This project is a **hybrid movie recommendation system** that combines **Content
 - **Libraries:** pandas, numpy, sklearn, keras, tensorflow, streamlit, requests  
 - **API Source:** [TMDb API](https://developers.themoviedb.org/)  
 - **LLM Integration:** Meta LLaMA 3.2 (local inference or API wrapped)  
-- **Text Modeling:** Bag of Words + Cosine Similarity  
+- **Text Modeling:**TF-IDF + Cosine Similarity  
 - **Visualization & EDA:** matplotlib, seaborn  
 - **Deployment:** Streamlit App (local or cloud)
 
