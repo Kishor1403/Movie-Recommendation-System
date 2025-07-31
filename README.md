@@ -5,11 +5,14 @@
 This project is a **hybrid movie recommendation system** that combines **Content-Based Filtering** and **Neural Collaborative Filtering** to deliver personalized movie recommendations. The system also integrates **Meta’s LLaMA 3.2** (a Large Language Model) to generate short summaries of the recommended movies, enhancing user experience with contextual insights.
 
 ---
+
+## Output Snippets 
 <img width="974" height="651" alt="Screenshot 2025-07-30 201616" src="https://github.com/user-attachments/assets/93894e5b-1dd8-4d51-a1fb-ef42d13e940c" />
 
-<img width="979" height="755" alt="Screenshot 2025-07-30 201632" src="https://github.com/user-attachments/assets/5a70e3f4-4eb0-4480-a8ad-ebef5bcd7cd3" />
+<img width="979" height="377" alt="Screenshot 2025-07-30 201632" src="https://github.com/user-attachments/assets/7acc99ac-77a4-499a-b5b2-35f8e8b3d038" />
 
-Note: Some Movie poster not loaded because sometimes tmdb api not responding
+
+## Note: Some Movie poster not loaded because sometimes tmdb api not responding
 
 <img width="962" height="721" alt="Screenshot 2025-07-30 201324" src="https://github.com/user-attachments/assets/ffd9c021-f60f-4255-9dad-1c2509556c11" />
 
