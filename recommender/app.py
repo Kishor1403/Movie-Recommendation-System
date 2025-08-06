@@ -1,12 +1,29 @@
-import pickle
 import streamlit as st
+import pickle
 import requests
-from langchain_ollama import ChatOllama
+import gdown
+import os
 
-# Initialize LLaMA 3.2
-llama = ChatOllama(model='llama3.2')
+from io import BytesIO
+
+
+# Loading pickled models using gdown
+# -------------------------------
+@st.cache_data(show_spinner=True)
+def load_pkl_from_drive(file_id, filename):
+    if not os.path.exists(filename):
+        url = f"https://drive.google.com/uc?id={file_id}"
+        gdown.download(url, filename, quiet=False)
+    with open(filename, 'rb') as f:
+        return pickle.load(f)
+
+# Loading movies and similarity matrix from Google Drive
+movies = load_pkl_from_drive("1eM8L5xNBu5FGINhdEMR71GxPmSGK2owC", "movies.pkl")
+similarity = load_pkl_from_drive("12hrVN_NeqeMOHaYOueAgOlJrwqmr5cbj", "similarity.pkl")
+
 
 # TMDb movie detail fetcher
+# -------------------------------
 def fetch_movie_details(movie_id):
     api_key = "755b5d711b4eb243a756e61906f05052"
     url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}&language=en-US"
@@ -33,9 +50,17 @@ def fetch_movie_details(movie_id):
 
     return fallback_url, "No description available."
 
+
 # Recommendation logic
+# -------------------------------
 def recommend(movie):
-    index = movies[movies['title'] == movie].index[0]
+    print(f"[DEBUG] Selected movie: {movie}")
+    try:
+        index = movies[movies['title'] == movie].index[0]
+    except IndexError:
+        print("[ERROR] Movie not found in DataFrame.")
+        return [], [], []
+
     distances = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1])
 
     recommended_movie_names = []
@@ -44,6 +69,7 @@ def recommend(movie):
 
     for i in distances[1:6]:
         movie_id = movies.iloc[i[0]].movie_id
+        print(f"[DEBUG] Recommending movie ID: {movie_id}")
         poster, overview = fetch_movie_details(movie_id)
         recommended_movie_names.append(movies.iloc[i[0]].title)
         recommended_movie_posters.append(poster)
@@ -51,29 +77,26 @@ def recommend(movie):
 
     return recommended_movie_names, recommended_movie_posters, recommended_movie_descriptions
 
-# Load data once
-movies = pickle.load(open('D:/Movie_Recommendation_1.1/recommender/movies_list.pkl', 'rb'))
-similarity = pickle.load(open('D:/Movie_Recommendation_1.1/recommender/similarity.pkl', 'rb'))
 
+
+# Streamlit UI
+# -------------------------------
 st.header('🎬 Movie Recommender System')
 
 movie_list = movies['title'].values
 selected_movie = st.selectbox("Type or select a movie from the dropdown", movie_list)
 
-# Initialize session state to hold recommendations
 if 'recommendations' not in st.session_state:
     st.session_state.recommendations = []
     st.session_state.posters = []
     st.session_state.descriptions = []
 
-# Show Recommendations button
 if st.button('Show Recommendation'):
     names, posters, descriptions = recommend(selected_movie)
     st.session_state.recommendations = names
     st.session_state.posters = posters
     st.session_state.descriptions = descriptions
 
-# Display recommended posters and titles (if available)
 if st.session_state.recommendations:
     st.subheader("📌 Top 5 Recommendations")
     cols = st.columns(5)
@@ -82,7 +105,9 @@ if st.session_state.recommendations:
             st.text(st.session_state.recommendations[i])
             st.image(st.session_state.posters[i])
 
-# Select a movie to summarize
+
+# Groq Summary Generation
+# -------------------------------
 st.subheader("🔍 Get More Info on Recommended Movie")
 
 selected_index = st.selectbox(
@@ -90,22 +115,47 @@ selected_index = st.selectbox(
     st.session_state.recommendations if st.session_state.recommendations else ["-- No movie selected --"]
 )
 
-if st.button("Generate Summary...") and selected_index and selected_index != "-- No movie selected --":
+# Loading Groq API key securely
+GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
+
+def generate_summary_with_groq(movie_title):
     prompt = f"""You are a movie expert.
 
-Generate a short and engaging 3-4 line summary for the movie titled "{selected_index}".
+Generate a short and engaging 3-4 line summary for the movie titled "{movie_title}".
 Include the release year, lead actor, director, and what the movie is about.
 Avoid making up fictional facts or content."""
 
-    with st.spinner("Generating LLaMA 3.2 summary..."):
-        llm_response = llama.invoke(prompt)
+    url = "https://api.groq.com/openai/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {GROQ_API_KEY}",
+        "Content-Type": "application/json"
+    }
+    data = {
+        "model": "llama3-70b-8192",
+        "messages": [
+            {"role": "system", "content": "You are a movie expert."},
+            {"role": "user", "content": prompt}
+        ],
+        "temperature": 0.7,
+        "max_tokens": 300
+    }
 
-        st.markdown(f"### 🎞️ {selected_index}")
-    
-    summary_text = llm_response.content if hasattr(llm_response, 'content') else str(llm_response)
+    try:
+        response = requests.post(url, headers=headers, json=data)
+        if response.status_code == 200:
+            return response.json()['choices'][0]['message']['content']
+        else:
+            return f"[Groq Error] Status Code: {response.status_code} - {response.text}"
+    except Exception as e:
+        return f"[Exception] {e}"
 
+if st.button("Generate Summary...") and selected_index and selected_index != "-- No movie selected --":
+    with st.spinner("Generating Groq summary..."):
+        summary_text = generate_summary_with_groq(selected_index)
+
+    st.markdown(f"### 🎞️ {selected_index}")
     st.markdown(f"""
-**LLaMA 3.2 Generated Summary:**
+**Groq Generated Summary:**
 
 {summary_text.replace("Directed by", "**Directed by**")
              .replace("starring", "**Starring**")
