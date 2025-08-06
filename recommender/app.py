@@ -149,17 +149,24 @@ Avoid making up fictional facts or content."""
     except Exception as e:
         return f"[Exception] {e}"
 
+
+
 if st.button("Generate Summary...") and selected_index and selected_index != "-- No movie selected --":
     with st.spinner("Generating Groq summary..."):
         summary_text = generate_summary_with_groq(selected_index)
 
     st.markdown(f"### 🎞️ {selected_index}")
+
+    formatted_summary = summary_text.replace("Directed by", "**Directed by**") \
+        .replace("starring", "**Starring**") \
+        .replace("Released in", "**Released in**") \
+        .replace("follows", "—") \
+        .replace("With its", "\n\n**With its**") \
+        .replace("Along the way", "\n\n**Along the way**")
+
     st.markdown(f"""
 **Groq Generated Summary:**
 
-{summary_text.replace("Directed by", "**Directed by**")
-             .replace("starring", "**Starring**")
-             .replace("Released in", "**Released in**")
-             .replace("follows", "—")
-             .replace("With its", "\n\n**With its**")
-             .replace("Along the way", "\n\n**Along the way**")}""")
+{formatted_summary}
+""")
+
