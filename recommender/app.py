@@ -162,5 +162,4 @@ if st.button("Generate Summary...") and selected_index and selected_index != "--
              .replace("Released in", "**Released in**")
              .replace("follows", "—")
              .replace("With its", "\n\n**With its**")
-             .replace("Along the way", "\n\n**Along the way**")}
-    """)
+             .replace("Along the way", "\n\n**Along the way**")}""")
