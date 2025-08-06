@@ -1,0 +1,36 @@
+# Ignore Python cache and environment files
+__pycache__/
+*.py[cod]
+*.so
+*.log
+
+# Ignore model files
+*.pkl
+*.joblib
+*.h5
+*.pt
+*.sav
+*.gz
+
+# Ignore downloaded data and large local files
+*.zip
+*.tar.gz
+*.csv
+*.json
+movies.pkl
+similarity.pkl
+*.pth
+
+# Ignore .streamlit secrets
+.streamlit/secrets.toml
+
+# Ignore local environment files
+.env
+*.env
+
+# Ignore Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore VSCode and IDE configs
+.vscode/
+.idea/
