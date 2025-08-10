@@ -9,7 +9,6 @@ This project is a **hybrid movie recommendation system** that combines **Content
 ## Output Snippets 
 <img width="1919" height="869" alt="Screenshot 2025-08-10 095336" src="https://github.com/user-attachments/assets/e8942e14-e64b-415c-b00c-b08e14956ed1" />
 <img width="1919" height="869" alt="Screenshot 2025-08-10 095502" src="https://github.com/user-attachments/assets/bc40cd3b-20c5-4f1d-aa58-70c59629b931" />
-<img width="1919" height="851" alt="Screenshot 2025-08-10 095514" src="https://github.com/user-attachments/assets/ca7b3047-423b-4a48-8b49-68d3eefb607f" />
 <img width="1919" height="862" alt="Screenshot 2025-08-10 095850" src="https://github.com/user-attachments/assets/1853b9e0-f01a-4f90-b433-89c8723d664b" />
 
 
