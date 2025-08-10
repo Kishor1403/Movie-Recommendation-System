@@ -1,7 +1,7 @@
 import requests
 import json
 import time
-import os
+import os               # to check files and there path
 import pandas as pd
 
 

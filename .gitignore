@@ -22,7 +22,7 @@ similarity.pkl
 *.pth
 *.pkl
 *.part
-
+report.docx
 # Ignore .streamlit secrets
 .streamlit/secrets.toml
 

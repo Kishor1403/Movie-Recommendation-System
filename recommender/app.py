@@ -81,7 +81,7 @@ def recommend(movie):
 
 # Streamlit UI
 # -------------------------------
-st.header('🎬 Movie Recommender System')
+st.header('Movie Recommender System')
 
 movie_list = movies['title'].values
 selected_movie = st.selectbox("Type or select a movie from the dropdown", movie_list)
@@ -98,7 +98,7 @@ if st.button('Show Recommendation'):
     st.session_state.descriptions = descriptions
 
 if st.session_state.recommendations:
-    st.subheader("📌 Top 5 Recommendations")
+    st.subheader("Top 5 Recommendations")
     cols = st.columns(5)
     for i in range(5):
         with cols[i]:
@@ -108,7 +108,7 @@ if st.session_state.recommendations:
 
 # Groq Summary Generation
 # -------------------------------
-st.subheader("🔍 Get More Info on Recommended Movie")
+st.subheader("Get More Info on Recommended Movie")
 
 selected_index = st.selectbox(
     "Choose a recommended movie", 
@@ -155,7 +155,7 @@ if st.button("Generate Summary...") and selected_index and selected_index != "--
     with st.spinner("Generating Groq summary..."):
         summary_text = generate_summary_with_groq(selected_index)
 
-    st.markdown(f"### 🎞️ {selected_index}")
+    st.markdown(f"### {selected_index}")
 
     formatted_summary = summary_text.replace("Directed by", "**Directed by**") \
         .replace("starring", "**Starring**") \
